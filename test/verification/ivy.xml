@@ -3,7 +3,7 @@
   <info organisation="${ivy.artifact.group}" module="${ivy.artifact.id}" revision="${project.revision}" />
 
   <configurations>
-    <!-- <conf name="pdi-ce" /> -->
+    <conf name="pdi-ce" />
     <conf name="default" />
     <conf name="test" />
     <conf name="big-data-plugin" />
@@ -13,9 +13,9 @@
   </configurations>
 
   <dependencies defaultconf="default->default">
-    <!--<dependency conf="pdi-ce->default" org="pentaho-kettle" name="pdi-ce" rev="${kettle.revision}" changing="true" transitive="false">
+    <dependency conf="pdi-ce->default" org="pentaho-kettle" name="pdi-ce" rev="${kettle.revision}" changing="true" transitive="false">
       <artifact name="pdi-ce" type="zip" ext="zip"/>
-    </dependency>-->
+    </dependency>
     <dependency org="pentaho" name="pentaho-big-data-plugin" rev="${dependency.pentaho-big-data-plugin.revision}" conf="big-data-plugin->default" changing="true" transitive="false">
       <artifact name="pentaho-big-data-plugin" type="zip"/>
     </dependency>

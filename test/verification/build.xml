@@ -18,7 +18,6 @@
   <property name="jobs-full" location="jobs" />
   <property name="stage" value="${bin}/stage" />
   <property name="run-lib" value="${run}/lib" />
-  <property name="run-libext" value="${run}/libext" />
   <property name="run-libswt" value="${run}/libswt" />
 
 	<macrodef name="ivy-resolve">
@@ -35,12 +34,17 @@
   <target name="resolve" depends="install-ivy,subfloor.resolve">
     <mkdir dir="${stage}/pdi-ce" />
     <mkdir dir="${run}" />
-    <get src="${kettle.url}" dest="${subfloor.tmp.dir}/${kettle.name}" usetimestamp="true"/>
+    <ivy-resolve conf="pdi-ce" directory="${stage}/pdi-ce" />
     <ivy-resolve conf="big-data-plugin" directory="${stage}/big-data-plugin" />
     <ivy-resolve conf="shim" directory="${stage}/shim" />
     <ivy-resolve conf="big-data-samples" directory="${stage}/big-data-samples" />
     <ivy-resolve conf="hive-jdbc" directory="${stage}/hive-jdbc" />
-    <unzip dest="${run}" src="${subfloor.tmp.dir}/${kettle.name}"/>
+    <unzip dest="${run}">
+      <fileset dir="${stage}/pdi-ce" />
+      <mapper>
+        <globmapper from="data-integration/*" to="*" />
+      </mapper>
+    </unzip>
     <unzip dest="${run}/plugins">
       <fileset dir="${stage}/big-data-plugin" />
     </unzip>
@@ -53,13 +57,6 @@
     <unzip dest="${run}/samples">
       <fileset dir="${stage}/big-data-samples" />
     </unzip>
-    <delete>
-      <fileset dir="${run-libext}/JDBC" includes="pentaho-hadoop-hive-jdbc-shim-*.jar" />
-      <fileset dir="${run-libext}" includes="junit-*.jar" />
-    </delete>
-    <copy todir="${run-libext}/JDBC">
-      <fileset dir="${stage}/hive-jdbc" />
-    </copy>
     <replace file="${run}/plugins/pentaho-big-data-plugin/plugin.properties" token="hadoop-20" value="${shim}"/>
   </target>
 
@@ -75,9 +72,6 @@
           <include name="*.jar" />
         </fileset>
         <fileset dir="${run-lib}">
-          <include name="*.jar" />
-        </fileset>
-        <fileset dir="${run-libext}">
           <include name="*.jar" />
         </fileset>
       </classpath>
@@ -103,8 +97,7 @@
         <!-- <fileset dir="test/libext/" includes="kettle.jar"/>-->
         <pathelement path="${testclasses.dir}"/>
 
-        <fileset dir="${run-libext}" 		includes="*.jar *.zip"/>
-        <fileset dir="${run-libext}/"	    includes="**/*.jar *.zip"/>
+        <fileset dir="${run-lib}" 		includes="*.jar *.zip"/>
         <fileset dir="${run-libswt}" 		includes="*.jar *.zip"/>
         <fileset dir="${run-libswt}/win32/" includes="*.jar *.zip"/>
       </classpath>
@@ -149,11 +142,9 @@
         <fileset dir="${run-lib}" includes="kettle-core*.jar"/>
         <fileset dir="${run-lib}" includes="kettle-engine*.jar"/>
         <fileset dir="${run-lib}" includes="kettle-db*.jar"/>
-        <!-- <fileset dir="test/libext/" includes="kettle.jar"/>-->
         <pathelement path="${testclasses.dir}"/>
 
-        <fileset dir="${run-libext}" 		includes="*.jar *.zip"/>
-        <fileset dir="${run-libext}/"	    includes="**/*.jar *.zip"/>
+        <fileset dir="${run-lib}" 		includes="*.jar *.zip"/>
         <fileset dir="${run-libswt}" 		includes="*.jar *.zip"/>
         <fileset dir="${run-libswt}/win32/" includes="*.jar *.zip"/>
       </classpath>
