@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+  <info organisation="${ivy.artifact.group}" module="${ivy.artifact.id}" revision="${project.revision}" />
+
+  <configurations>
+    <!-- <conf name="pdi-ce" /> -->
+    <conf name="default" />
+    <conf name="test" />
+    <conf name="big-data-plugin" />
+    <conf name="shim" />
+    <conf name="big-data-samples" />
+    <conf name="hive-jdbc" />
+  </configurations>
+
+  <dependencies defaultconf="default->default">
+    <!--<dependency conf="pdi-ce->default" org="pentaho-kettle" name="pdi-ce" rev="${kettle.revision}" changing="true" transitive="false">
+      <artifact name="pdi-ce" type="zip" ext="zip"/>
+    </dependency>-->
+    <dependency org="pentaho" name="pentaho-big-data-plugin" rev="${dependency.pentaho-big-data-plugin.revision}" conf="big-data-plugin->default" changing="true" transitive="false">
+      <artifact name="pentaho-big-data-plugin" type="zip"/>
+    </dependency>
+    <dependency org="pentaho" name="pentaho-hadoop-shims-${shim}-package" rev="${shim.revision}" conf="shim->default" changing="true" transitive="false">
+      <artifact name="pentaho-hadoop-shims-${shim}-package" type="zip"/>
+    </dependency>
+    <dependency org="pentaho" name="pentaho-big-data-plugin-samples" rev="${dependency.pentaho-big-data-plugin-samples.revision}" conf="big-data-samples->default" changing="true" transitive="false">
+      <artifact name="pentaho-big-data-plugin-samples" type="zip"/>
+    </dependency>
+    <dependency org="pentaho" name="pentaho-hadoop-hive-jdbc-shim" rev="${shim.revision}" changing="true" transitive="false" conf="hive-jdbc->default" />
+    <dependency org="junit" name="junit" rev="4.11" conf="test->default"/>
+  </dependencies>
+</ivy-module>
