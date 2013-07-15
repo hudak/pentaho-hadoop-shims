@@ -10,6 +10,7 @@
     <conf name="shim" />
     <conf name="big-data-samples" />
     <conf name="hive-jdbc" />
+    <conf name="hsqldb" />
   </configurations>
 
   <dependencies defaultconf="default->default">
@@ -27,5 +28,6 @@
     </dependency>
     <dependency org="pentaho" name="pentaho-hadoop-hive-jdbc-shim" rev="${shim.revision}" changing="true" transitive="false" conf="hive-jdbc->default" />
     <dependency org="junit" name="junit" rev="4.11" conf="test->default"/>
+    <dependency org="org.hsqldb" name="hsqldb" rev="${dependency.hsqldb.revision}" conf="hsqldb->default" />
   </dependencies>
 </ivy-module>

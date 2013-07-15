@@ -17,6 +17,8 @@
   <property name="run" value="run" />
   <property name="jobs-full" location="jobs" />
   <property name="stage" value="${bin}/stage" />
+  <property name="hsqldb" value="${run}/hsqldb" />
+  <property name="hsqldb-stage" value="${stage}/hsqldb" />
   <property name="run-lib" value="${run}/lib" />
   <property name="run-libswt" value="${run}/libswt" />
 
@@ -34,17 +36,22 @@
   <target name="resolve" depends="install-ivy,subfloor.resolve">
     <mkdir dir="${stage}/pdi-ce" />
     <mkdir dir="${run}" />
+    <mkdir dir="${hsqldb}" />
     <ivy-resolve conf="pdi-ce" directory="${stage}/pdi-ce" />
     <ivy-resolve conf="big-data-plugin" directory="${stage}/big-data-plugin" />
     <ivy-resolve conf="shim" directory="${stage}/shim" />
     <ivy-resolve conf="big-data-samples" directory="${stage}/big-data-samples" />
     <ivy-resolve conf="hive-jdbc" directory="${stage}/hive-jdbc" />
+    <ivy-resolve conf="hsqldb" directory="${hsqldb-stage}" />
     <unzip dest="${run}">
       <fileset dir="${stage}/pdi-ce" />
       <mapper>
         <globmapper from="data-integration/*" to="*" />
       </mapper>
     </unzip>
+    <copy todir="${hsqldb}">
+      <fileset dir="${hsqldb-stage}" includes="*.jar"/>
+    </copy>
     <unzip dest="${run}/plugins">
       <fileset dir="${stage}/big-data-plugin" />
     </unzip>
@@ -54,6 +61,15 @@
     <unzip dest="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
       <fileset dir="${stage}/shim" />
     </unzip>
+    <path id="shimLibPath">
+      <dirset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
+        <include name="**/lib"/>
+      </dirset>
+    </path>
+    <property name="shimLib" location="${toString:shimLibPath}"/>
+    <copy todir="${shimLib}">
+      <fileset dir="${hsqldb-stage}" includes="*.jar"/>
+    </copy>
     <unzip dest="${run}/samples">
       <fileset dir="${stage}/big-data-samples" />
     </unzip>
@@ -64,6 +80,7 @@
     <dot-classpath>
       <!-- Include all lib dirs -->
       <classpath>
+        <fileset dir="${hsqldb}" includes="*.jar" />
         <fileset dir="${testlib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}">
           <include name="*.jar" />
@@ -91,6 +108,7 @@
            fork="true">
       <src path="${testsrc.dir}" />
       <classpath>
+        <fileset dir="${hsqldb}" includes="*.jar" />
         <fileset dir="${testlib.dir}" includes="*.jar"/>
         <fileset dir="${run-lib}" includes="kettle-core*.jar"/>
         <fileset dir="${run-lib}" includes="kettle-engine*.jar"/>
@@ -113,6 +131,13 @@
   </target>
 
   <target name="test" depends="compile,compile-tests,init-test-reports" description="Execute the tests">
+    <path id="shimPath">
+      <dirset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
+        <depth max="0" />
+        <include name="**/*"/>
+      </dirset>
+    </path>
+    <property name="shimFolder" location="${toString:shimPath}"/>
     <junit maxmemory="${junit.maxmemory}"
            fork="yes"
            failureProperty="test.failed"
@@ -120,7 +145,12 @@
            printsummary="yes"
            forkmode="once"
            jvm="java"
-           dir="${run}">
+           dir="${run}"
+           showoutput="true">
+      <jvmarg value="-Xdebug" /> 
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=57462" /> 
+      <env key="SQOOP_CONF_DIR" value="${shimFolder}"/>
+      <env key="SQOOP_HOME" value="${shimFolder}"/>
       <sysproperty key="hadoop.hostname" value="${hadoop.hostname}" />
       <sysproperty key="hadoop.port" value="${hadoop.port}" />
       <sysproperty key="hadoop.scheme" value="${hadoop.scheme}" />
@@ -128,16 +158,22 @@
       <sysproperty key="hive.hostname" value="${hive.hostname}" />
       <sysproperty key="hive.port" value="${hive.port}" />
       <sysproperty key="hive.type" value="${hive.type}" />
+      <sysproperty key="hive.properties" value="${hive.properties}" />
+      <sysproperty key="hive.site.dir" value="${shimFolder}" />
+      <sysproperty key="oozie.hostname" value="${oozie.hostname}" />
+      <sysproperty key="oozie.port" value="${oozie.port}" />
       <sysproperty key="zookeeper.hostname" value="${zookeeper.hostname}" />
       <sysproperty key="zookeeper.port" value="${zookeeper.port}" />
       <sysproperty key="jobtracker.hostname" value="${jobtracker.hostname}" />
       <sysproperty key="jobtracker.port" value="${jobtracker.port}" />
       <sysproperty key="job.dirname" value="${jobs-full}" />
       <sysproperty key="hadoop.mapper" value="Hadoop-InputOutput-test.ktr" />
-      <sysproperty key="job.order" value="load_wordcount.kjb" />
+      <sysproperty key="job.order" value="load_wordcount.kjb,PrepareHyperSql.kjb,SetupHiveCli.kjb" />
       <sysproperty key="pmr-sample.jar.location" value="samples/jobs/hadoop/pentaho-mapreduce-sample.jar" />
+      <sysproperty key="zookeeper.znode.parent" value="/hbase-unsecure" />
 
       <classpath>
+        <fileset dir="${hsqldb}" includes="*.jar" />
         <fileset dir="${testlib.dir}" includes="*.jar"/>
         <fileset dir="${run-lib}" includes="kettle-core*.jar"/>
         <fileset dir="${run-lib}" includes="kettle-engine*.jar"/>
@@ -172,123 +208,4 @@
       <report format="frames" todir="${testreports.html.dir}" />
     </junitreport>
   </target>
-
-  <target name="load">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-level Debug" />
-      <arg value="-file" />
-      <arg path="jobs/load_wordcount.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:hadoop.scheme=${hadoop.scheme}" />
-      <arg value="-param:hive.database=${hive.database}" />
-      <arg value="-param:hive.hostname=${hive.hostname}" />
-      <arg value="-param:hive.port=${hive.port}" />
-      <arg value="-param:hive.type=${hive.type}" />
-      <arg value="-param:zookeeper.hostname=${zookeeper.hostname}" />
-      <arg value="-param:zookeeper.port=${zookeeper.port}" />
-    </exec>
-  </target>
-
-  <target name="pig">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/aggregate_pig.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:hadoop.scheme=${hadoop.scheme}" />
-      <arg value="-param:jobtracker.hostname=${jobtracker.hostname}" />
-      <arg value="-param:jobtracker.port=${jobtracker.port}" />
-    </exec>
-  </target>
-
-  <target name="mr">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/aggregate_mr.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:jobtracker.hostname=${jobtracker.hostname}" />
-      <arg value="-param:jobtracker.port=${jobtracker.port}" />
-    </exec>
-  </target>
-
-  <target name="pmr-wc">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/Pentaho MapReduce - wordcount - test.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:jobtracker.hostname=${jobtracker.hostname}" />
-      <arg value="-param:jobtracker.port=${jobtracker.port}" />
-    </exec>
-  </target>
-
-  <target name="pmr-hbase">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/Pentaho MapReduce - HBase - test.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:jobtracker.hostname=${jobtracker.hostname}" />
-      <arg value="-param:jobtracker.port=${jobtracker.port}" />
-      <arg value="-param:zookeeper.hostname=${zookeeper.hostname}" />
-      <arg value="-param:zookeeper.port=${zookeeper.port}" />
-    </exec>
-  </target>
-
-  <target name="pmr-simple">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/Hadoop Job Executor simple.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:hadoop.scheme=${hadoop.scheme}" />
-      <arg value="-param:jobtracker.hostname=${jobtracker.hostname}" />
-      <arg value="-param:jobtracker.port=${jobtracker.port}" />
-      <arg value="-param:pmr-sample.jar.location=samples/jobs/hadoop/pentaho-mapreduce-sample.jar" />
-    </exec>
-  </target>
-
-  <target name="pmr-hadoop-inputoutput">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/Pentaho MapReduce - Hadoop - test.kjb" />
-      <arg value="-param:hadoop.hostname=${hadoop.hostname}" />
-      <arg value="-param:hadoop.port=${hadoop.port}" />
-      <arg value="-param:hadoop.scheme=${hadoop.scheme}" />
-      <arg value="-param:hadoop.mapper=Hadoop-InputOutput-test.ktr" />
-      <arg value="-param:jobtracker.hostname=${jobtracker.hostname}" />
-      <arg value="-param:jobtracker.port=${jobtracker.port}" />
-    </exec>
-  </target>
-
-  <target name="hive-input">
-    <chmod file="${run}/kitchen.sh" perm="a+x" />
-    <exec executable="./kitchen.sh" dir="${run}" failonerror="true">
-      <arg value="-norep" />
-      <arg value="-file" />
-      <arg path="jobs/Hive-Input-test.kjb" />
-      <arg value="-param:hive.hostname=${hive.hostname}" />
-      <arg value="-param:hive.port=${hive.port}" />
-      <arg value="-param:hive.database=${hive.database}" />
-      <arg value="-param:hive.type=${hive.type}" />
-    </exec>
-  </target>
-
- <target name="run-all" depends="load,pig,mr,pmr-wc,pmr-hbase,pmr-simple,pmr-hadoop-inputoutput,hive-input" />
 </project>
