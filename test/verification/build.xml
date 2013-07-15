@@ -168,7 +168,7 @@
       <sysproperty key="jobtracker.port" value="${jobtracker.port}" />
       <sysproperty key="job.dirname" value="${jobs-full}" />
       <sysproperty key="hadoop.mapper" value="Hadoop-InputOutput-test.ktr" />
-      <sysproperty key="job.order" value="load_wordcount.kjb,PrepareHyperSql.kjb,SetupHiveCli.kjb" />
+      <sysproperty key="job.order" value="InitializeHsqlDriver.kjb,load_wordcount.kjb,PrepareHyperSql.kjb,SetupHiveCli.kjb" />
       <sysproperty key="pmr-sample.jar.location" value="samples/jobs/hadoop/pentaho-mapreduce-sample.jar" />
       <sysproperty key="zookeeper.znode.parent" value="/hbase-unsecure" />
 
