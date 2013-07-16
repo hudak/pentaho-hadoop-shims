@@ -38,6 +38,7 @@
   </target>
 
   <target name="resolve" depends="install-ivy,subfloor.resolve">
+    <mkdir dir="src" />
     <mkdir dir="${stage}/pdi-ce" />
     <mkdir dir="${run}" />
     <mkdir dir="${hsqldb}" />
