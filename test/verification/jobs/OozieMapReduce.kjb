@@ -82,7 +82,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
+      <xloc>633</xloc>
       <yloc>191</yloc>
       </entry>
     <entry>
@@ -135,20 +135,54 @@
       </parameters>      <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>266</xloc>
+      <xloc>467</xloc>
       <yloc>194</yloc>
+      </entry>
+    <entry>
+      <name>Delete folders</name>
+      <description/>
+      <type>DELETE_FOLDERS</type>
+      <arg_from_previous>N</arg_from_previous>
+      <success_condition>success_if_no_errors</success_condition>
+      <limit_folders>10</limit_folders>
+      <fields>
+        <field>
+          <name>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;examples</name>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>228</xloc>
+      <yloc>197</yloc>
+      </entry>
+    <entry>
+      <name>Hadoop Copy Files</name>
+      <description/>
+      <type>HadoopCopyFilesPlugin</type>
+      <copy_empty_folders>Y</copy_empty_folders>
+      <arg_from_previous>N</arg_from_previous>
+      <overwrite_files>N</overwrite_files>
+      <include_subfolders>Y</include_subfolders>
+      <remove_source_files>N</remove_source_files>
+      <add_result_filesname>N</add_result_filesname>
+      <destination_is_a_file>N</destination_is_a_file>
+      <create_destination_folder>Y</create_destination_folder>
+      <fields>
+        <field>
+          <source_filefolder>&#x24;&#x7b;user.dir&#x7d;&#x2f;examples</source_filefolder>
+          <destination_filefolder>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;examples</destination_filefolder>
+          <wildcard/>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>344</xloc>
+      <yloc>196</yloc>
       </entry>
   </entries>
   <hops>
-    <hop>
-      <from>START</from>
-      <to>CreateOozieProperties</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
     <hop>
       <from>CreateOozieProperties</from>
       <to>Oozie Job Executor</to>
@@ -157,6 +191,33 @@
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>START</from>
+      <to>Delete folders</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Delete folders</from>
+      <to>Hadoop Copy Files</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Hadoop Copy Files</from>
+      <to>CreateOozieProperties</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>

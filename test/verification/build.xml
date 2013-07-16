@@ -33,6 +33,10 @@
     </sequential>
   </macrodef>
 
+  <target name="prepare-jsch" depends="install-ivy">
+    <ivy-resolve conf="jsch" directory="${user.home}/.ant/lib" />             
+  </target>
+
   <target name="resolve" depends="install-ivy,subfloor.resolve">
     <mkdir dir="${stage}/pdi-ce" />
     <mkdir dir="${run}" />
@@ -74,6 +78,15 @@
       <fileset dir="${stage}/big-data-samples" />
     </unzip>
     <replace file="${run}/plugins/pentaho-big-data-plugin/plugin.properties" token="hadoop-20" value="${shim}"/>
+    <mkdir dir="${stage}/oozie-examples" />
+    <mkdir dir="${stage}/oozie-examples-unzipped" />
+    <scp file="${oozie.scp.username}:${oozie.scp.password}@${oozie.hostname}:${oozie.examples.path}" todir="${stage}/oozie-examples" />
+    <gunzip dest="${stage}/oozie-examples-unzipped">
+      <fileset dir="${stage}/oozie-examples"/>
+    </gunzip>
+    <untar dest="${run}">
+      <fileset dir="${stage}/oozie-examples-unzipped"/>
+    </untar>
   </target>
 
   <target name="create-dot-classpath" depends="install-pentaho-ant-tasks,init">
