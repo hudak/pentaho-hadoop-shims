@@ -122,7 +122,7 @@
            <schema_name/>
            </partitioning>
     <connection>Hive</connection>
-    <sql>select &#x2a; from account where account_type &#x3d; &#x27;Expense&#x27;</sql>
+    <sql>select &#x2a; from weblogs where client_ip &#x3d; &#x27;13.35.602.684&#x27;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
