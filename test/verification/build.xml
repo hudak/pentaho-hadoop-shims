@@ -13,6 +13,7 @@
 
   <import file="../../build-res/subfloor.xml"/>
 
+  <property environment="env"/>
   <property name="bin" value="bin" />
   <property name="run" value="run" />
   <property name="jobs-full" location="jobs" />
@@ -145,6 +146,9 @@
   </target>
 
   <target name="test" depends="compile,compile-tests,init-test-reports" description="Execute the tests">
+    <delete>
+      <fileset dir="${run}" includes="*.java"/>
+    </delete>
     <path id="shimPath">
       <dirset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
         <depth max="0" />
@@ -165,6 +169,9 @@
       <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=57462" /> 
       <env key="SQOOP_CONF_DIR" value="${shimFolder}"/>
       <env key="SQOOP_HOME" value="${shimFolder}"/>
+      <env key="PATH" value="${hive.install}/bin:${env.PATH}"/>
+      <env key="HIVE_HOME" value="${hive.install}"/>
+      <env key="HADOOP_HOME" value="${hadoop.install}"/>
       <sysproperty key="hadoop.hostname" value="${hadoop.hostname}" />
       <sysproperty key="hadoop.port" value="${hadoop.port}" />
       <sysproperty key="hadoop.scheme" value="${hadoop.scheme}" />
