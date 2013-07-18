@@ -58,6 +58,16 @@
       <fileset dir="${stage}/big-data-samples" />
     </unzip>
     <replace file="${run}/plugins/pentaho-big-data-plugin/plugin.properties" token="hadoop-20" value="${shim}"/>
+    <mkdir dir="${stage}/oozie-examples" />
+    <mkdir dir="${stage}/oozie-examples-unzipped" />
+    <scp file="${oozie.scp.username}:${oozie.scp.password}@${oozie.hostname}:${oozie.examples.path}" todir="${stage}/oozie-examples" />
+    <gunzip dest="${stage}/oozie-examples-unzipped">
+      <fileset dir="${stage}/oozie-examples"/>
+    </gunzip>
+    <untar dest="${run}">
+      <fileset dir="${stage}/oozie-examples-unzipped"/>
+    </untar>
+    <unzip dest="jobs/" src="jobs/resources.zip"/>
   </target>
 
   <target name="create-dot-classpath" depends="install-pentaho-ant-tasks,init">
@@ -80,6 +90,7 @@
 
   <target name="clean-all" depends="subfloor.clean-all">
     <delete dir="${run}" />
+    <delete dir="jobs/resources" />
   </target>
 
   <target name="compile-tests" depends="init-tests">
