@@ -89,6 +89,7 @@
     <untar dest="${run}">
       <fileset dir="${stage}/oozie-examples-unzipped"/>
     </untar>
+    <unzip dest="jobs/" src="jobs/resources.zip"/>
   </target>
 
   <target name="create-dot-classpath" depends="install-pentaho-ant-tasks,init">
@@ -112,6 +113,7 @@
 
   <target name="clean-all" depends="subfloor.clean-all">
     <delete dir="${run}" />
+    <delete dir="jobs/resources" />
   </target>
 
   <target name="compile-tests" depends="init-tests">
