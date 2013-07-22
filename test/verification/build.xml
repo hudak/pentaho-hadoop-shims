@@ -165,8 +165,6 @@
            jvm="java"
            dir="${run}"
            showoutput="true">
-      <jvmarg value="-Xdebug" /> 
-      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=57462" /> 
       <env key="SQOOP_CONF_DIR" value="${shimFolder}"/>
       <env key="SQOOP_HOME" value="${shimFolder}"/>
       <env key="PATH" value="${hive.install}/bin:${env.PATH}"/>
