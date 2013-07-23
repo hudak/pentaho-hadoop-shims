@@ -172,6 +172,7 @@
       <env key="PATH" value="${hive.install}/bin:${env.PATH}"/>
       <env key="HIVE_HOME" value="${hive.install}"/>
       <env key="HADOOP_HOME" value="${hadoop.install}"/>
+      <sysproperty key="hsql.url" value="${hsql.url}" />
       <sysproperty key="hadoop.hostname" value="${hadoop.hostname}" />
       <sysproperty key="hadoop.port" value="${hadoop.port}" />
       <sysproperty key="hadoop.scheme" value="${hadoop.scheme}" />
