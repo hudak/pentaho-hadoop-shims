@@ -15,15 +15,15 @@
 
   <property environment="env"/>
   <property name="bin" value="bin" />
-  <property name="run" value="run" />
-  <property name="jobs-full" location="jobs" />
+  <property name="run" location="${kettle-dir}" />
+  <property name="suite.job.dirname" location="${suite.job.relative}" />
   <property name="stage" value="${bin}/stage" />
   <property name="hsqldb" value="${run}/hsqldb" />
   <property name="hsqldb-stage" value="${stage}/hsqldb" />
   <property name="run-lib" value="${run}/lib" />
   <property name="run-libswt" value="${run}/libswt" />
 
-	<macrodef name="ivy-resolve">
+  <macrodef name="ivy-resolve">
     <attribute name="ivyfile" default="${ivyfile}" />
     <attribute name="conf" default="default" />
     <attribute name="directory"/>
@@ -38,58 +38,72 @@
     <ivy-resolve conf="jsch" directory="${user.home}/.ant/lib" />             
   </target>
 
-  <target name="resolve" depends="install-ivy,subfloor.resolve">
-    <mkdir dir="src" />
-    <mkdir dir="${stage}/pdi-ce" />
-    <mkdir dir="${run}" />
-    <mkdir dir="${hsqldb}" />
+  <target name="get-pdi-ce" depends="install-ivy">
     <ivy-resolve conf="pdi-ce" directory="${stage}/pdi-ce" />
-    <ivy-resolve conf="big-data-plugin" directory="${stage}/big-data-plugin" />
-    <ivy-resolve conf="shim" directory="${stage}/shim" />
-    <ivy-resolve conf="big-data-samples" directory="${stage}/big-data-samples" />
-    <ivy-resolve conf="hive-jdbc" directory="${stage}/hive-jdbc" />
-    <ivy-resolve conf="hsqldb" directory="${hsqldb-stage}" />
+    <mkdir dir="${run}" />
     <unzip dest="${run}">
       <fileset dir="${stage}/pdi-ce" />
       <mapper>
         <globmapper from="data-integration/*" to="*" />
       </mapper>
     </unzip>
-    <copy todir="${hsqldb}">
-      <fileset dir="${hsqldb-stage}" includes="*.jar"/>
-    </copy>
+  </target>
+
+  <target name="install-big-data" depends="install-ivy">
+    <ivy-resolve conf="big-data-plugin" directory="${stage}/big-data-plugin" />
+    <ivy-resolve conf="big-data-samples" directory="${stage}/big-data-samples" />
     <unzip dest="${run}/plugins">
       <fileset dir="${stage}/big-data-plugin" />
     </unzip>
+    <unzip dest="${run}/samples">
+      <fileset dir="${stage}/big-data-samples" />
+    </unzip>
+  </target>
+
+  <target name="install-shim" depends="install-ivy">
+    <ivy-resolve conf="shim" directory="${stage}/shim" />
     <delete includeemptydirs="true">
       <fileset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/" includes="**/*" />
     </delete>
     <unzip dest="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
       <fileset dir="${stage}/shim" />
     </unzip>
+    <replaceregexp file="${run}/plugins/pentaho-big-data-plugin/plugin.properties" match="active.hadoop.configuration=(.*)" replace="active.hadoop.configuration=${shim}" byline="true"/>
+  </target>
+
+  <target name="setup-hsql" depends="install-ivy">
+    <mkdir dir="${hsqldb}" />
+    <ivy-resolve conf="hsqldb" directory="${hsqldb-stage}" />
+    <copy todir="${hsqldb}">
+      <fileset dir="${hsqldb-stage}" includes="*.jar"/>
+    </copy>
     <path id="shimLibPath">
       <dirset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
         <include name="**/lib"/>
       </dirset>
     </path>
     <property name="shimLib" location="${toString:shimLibPath}"/>
-    <copy todir="${shimLib}">
-      <fileset dir="${hsqldb-stage}" includes="*.jar"/>
-    </copy>
-    <unzip dest="${run}/samples">
-      <fileset dir="${stage}/big-data-samples" />
-    </unzip>
-    <replace file="${run}/plugins/pentaho-big-data-plugin/plugin.properties" token="hadoop-20" value="${shim}"/>
+    <for param="to.dir" list="${shimLib}" delimiter="${path.separator}">
+      <sequential>
+        <copy todir="@{to.dir}">
+          <fileset dir="${hsqldb-stage}" includes="*.jar"/>
+        </copy>
+      </sequential>
+    </for>
+  </target>
+
+  <target name="setup-pdi-ce" depends="install-ivy,get-pdi-ce,install-big-data,install-shim,setup-hsql,get-oozie-examples"/>
+
+  <target name="get-oozie-examples">
     <mkdir dir="${stage}/oozie-examples" />
     <mkdir dir="${stage}/oozie-examples-unzipped" />
-    <scp file="${oozie.scp.username}:${oozie.scp.password}@${oozie.hostname}:${oozie.examples.path}" todir="${stage}/oozie-examples" />
+    <scp file="${suite.oozie.scp.username}:${suite.oozie.scp.password}@${suite.oozie.hostname}:${suite.oozie.examples.path}" todir="${stage}/oozie-examples" />
     <gunzip dest="${stage}/oozie-examples-unzipped">
       <fileset dir="${stage}/oozie-examples"/>
     </gunzip>
     <untar dest="${run}">
       <fileset dir="${stage}/oozie-examples-unzipped"/>
     </untar>
-    <unzip dest="jobs/" src="jobs/resources.zip"/>
   </target>
 
   <target name="create-dot-classpath" depends="install-pentaho-ant-tasks,init">
@@ -114,6 +128,12 @@
   <target name="clean-all" depends="subfloor.clean-all">
     <delete dir="${run}" />
     <delete dir="jobs/resources" />
+  </target>
+
+  <target name="compile.pre" depends="install-ivy,subfloor.compile.pre">
+    <mkdir dir="src" />
+    <unzip dest="jobs/" src="jobs/resources.zip"/>
+    <ivy-resolve conf="test" directory="${testlib.dir}" />
   </target>
 
   <target name="compile-tests" depends="init-tests">
@@ -169,30 +189,14 @@
            showoutput="true">
       <env key="SQOOP_CONF_DIR" value="${shimFolder}"/>
       <env key="SQOOP_HOME" value="${shimFolder}"/>
-      <env key="PATH" value="${hive.install}/bin:${env.PATH}"/>
-      <env key="HIVE_HOME" value="${hive.install}"/>
-      <env key="HADOOP_HOME" value="${hadoop.install}"/>
-      <sysproperty key="hsql.url" value="${hsql.url}" />
-      <sysproperty key="hadoop.hostname" value="${hadoop.hostname}" />
-      <sysproperty key="hadoop.port" value="${hadoop.port}" />
-      <sysproperty key="hadoop.scheme" value="${hadoop.scheme}" />
-      <sysproperty key="hive.database" value="${hive.database}" />
-      <sysproperty key="hive.hostname" value="${hive.hostname}" />
-      <sysproperty key="hive.port" value="${hive.port}" />
-      <sysproperty key="hive.type" value="${hive.type}" />
-      <sysproperty key="hive.properties" value="${hive.properties}" />
+      <env key="PATH" value="${suite.hive.install}/bin${path.separator}${env.PATH}"/>
+      <env key="HIVE_HOME" value="${suite.hive.install}"/>
+      <env key="HADOOP_HOME" value="${suite.hadoop.install}"/>
       <sysproperty key="hive.site.dir" value="${shimFolder}" />
-      <sysproperty key="oozie.hostname" value="${oozie.hostname}" />
-      <sysproperty key="oozie.port" value="${oozie.port}" />
-      <sysproperty key="zookeeper.hostname" value="${zookeeper.hostname}" />
-      <sysproperty key="zookeeper.port" value="${zookeeper.port}" />
-      <sysproperty key="jobtracker.hostname" value="${jobtracker.hostname}" />
-      <sysproperty key="jobtracker.port" value="${jobtracker.port}" />
-      <sysproperty key="job.dirname" value="${jobs-full}" />
-      <sysproperty key="hadoop.mapper" value="Hadoop-InputOutput-test.ktr" />
-      <sysproperty key="job.order" value="InitializeHsqlDriver.kjb,load_wordcount.kjb,PrepareHyperSql.kjb,SetupHiveCli.kjb" />
-      <sysproperty key="pmr-sample.jar.location" value="samples/jobs/hadoop/pentaho-mapreduce-sample.jar" />
-      <sysproperty key="zookeeper.znode.parent" value="/hbase-unsecure" />
+      <syspropertyset>
+        <propertyref prefix="suite." />
+        <mapper type="glob" from="suite.*" to="" />
+      </syspropertyset>
 
       <classpath>
         <fileset dir="${hsqldb}" includes="*.jar" />
