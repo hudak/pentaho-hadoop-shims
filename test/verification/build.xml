@@ -52,6 +52,9 @@
   <target name="install-big-data" depends="install-ivy">
     <ivy-resolve conf="big-data-plugin" directory="${stage}/big-data-plugin" />
     <ivy-resolve conf="big-data-samples" directory="${stage}/big-data-samples" />
+    <delete includeemptydirs="true">
+      <fileset dir="${run}/plugins/pentaho-big-data-plugin" includes="**/*" />
+    </delete>
     <unzip dest="${run}/plugins">
       <fileset dir="${stage}/big-data-plugin" />
     </unzip>
