@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>PrepareHyperSql</name>
+  <name>hive1</name>
     <description/>
     <extended_description/>
     <job_version/>
     <job_status>0</job_status>
   <directory>&#x2f;</directory>
   <created_user>-</created_user>
-  <created_date>2013&#x2f;07&#x2f;10 15&#x3a;22&#x3a;51.445</created_date>
+  <created_date>2010&#x2f;07&#x2f;19 21&#x3a;35&#x3a;45.843</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2013&#x2f;07&#x2f;10 15&#x3a;22&#x3a;51.445</modified_date>
+  <modified_date>2010&#x2f;07&#x2f;19 21&#x3a;35&#x3a;45.843</modified_date>
     <parameters>
         <parameter>
-            <name>hsql.port</name>
+            <name>hive1.database</name>
             <default_value/>
             <description/>
         </parameter>
         <parameter>
-            <name>hsql.url</name>
+            <name>hive1.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>hive1.password</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>hive1.port</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>hive1.username</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.hdfs.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.hdfs.port</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.jobtracker.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.jobtracker.port</name>
             <default_value/>
             <description/>
         </parameter>
@@ -44,31 +79,9 @@
       <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
     </attributes>
   </connection>
-  <connection>
-    <name>HyperSql</name>
-    <server>&#x24;&#x7b;hsql.url&#x7d;</server>
-    <type>HYPERSONIC</type>
-    <access>Native</access>
-    <database>xdb</database>
-    <port>&#x24;&#x7b;hsql.port&#x7d;</port>
-    <username>cluster</username>
-    <password>Encrypted 2be98afc86aa7f2e4cb1aa265cd86aac8</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
-      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
-      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;hsql.port&#x7d;</attribute></attribute>
-      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
-      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
-      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
-      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
-      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
-    </attributes>
-  </connection>
     <slaveservers>
+         <slaveserver><name>di server</name><hostname>localhost</hostname><port>9080</port><webAppName>pentaho-di</webAppName><username>joe</username><password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password><proxy_hostname/><proxy_port/><non_proxy_hosts/><master>N</master></slaveserver>
+         <slaveserver><name>Carte</name><hostname>localhost</hostname><port>9991</port><webAppName/><username>cluster</username><password>Encrypted 2be98afc86aa7f2e4cb1aa265cd86aac8</password><proxy_hostname/><proxy_port/><non_proxy_hosts/><master>N</master></slaveserver>
     </slaveservers>
 <job-log-table><connection/>
 <schema/>
@@ -107,24 +120,19 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>83</xloc>
-      <yloc>59</yloc>
+      <xloc>19</xloc>
+      <yloc>158</yloc>
       </entry>
     <entry>
-      <name>SQL</name>
+      <name>Failure</name>
       <description/>
-      <type>SQL</type>
-      <sql>DROP TABLE &#x22;PUBLIC&#x22;.HBASE IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.HBASE&#xa;&#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, apr BIGINT&#xa;, aug BIGINT&#xa;, &#x22;DEC&#x22; BIGINT&#xa;, feb BIGINT&#xa;, jan BIGINT&#xa;, jul BIGINT&#xa;, jun BIGINT&#xa;, mar BIGINT&#xa;, may BIGINT&#xa;, nov BIGINT&#xa;, oct BIGINT&#xa;, sep BIGINT&#xa;&#x29;&#xa;&#x3b;&#xa;&#xa;DROP TABLE &#x22;PUBLIC&#x22;.HIVE IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.HIVE&#xa;&#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, &#x22;MONTH&#x22; VARCHAR&#x28;32&#x29;&#xa;, month_num BIGINT&#xa;, pageviews BIGINT&#xa;&#x29;&#xa;&#x3b;&#xa;&#xa;DROP TABLE &#x22;PUBLIC&#x22;.HDFS IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.HDFS&#xa;&#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, month_num BIGINT&#xa;, pageviews BIGINT&#xa;&#x29;&#xa;&#x3b;&#xa;&#xa;DROP TABLE &#x22;PUBLIC&#x22;.AGGREGATEHDFS IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.AGGREGATEHDFS &#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, month_num BIGINT&#xa;, pageviews BIGINT&#xa;&#x29;&#xa;&#x3b;</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename/>
-      <sendOneStatement>F</sendOneStatement>
-      <connection>HyperSql</connection>
+      <type>ABORT</type>
+      <message/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>190</xloc>
-      <yloc>59</yloc>
+      <xloc>440</xloc>
+      <yloc>292</yloc>
       </entry>
     <entry>
       <name>Success</name>
@@ -133,16 +141,16 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>628</xloc>
-      <yloc>61</yloc>
+      <xloc>439</xloc>
+      <yloc>158</yloc>
       </entry>
     <entry>
-      <name>LoadHyperSqlHbase</name>
+      <name>Transformation</name>
       <description/>
       <type>TRANS</type>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;LoadHyperSqlHbase.ktr</filename>
+      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;hive1_input_output.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -166,80 +174,14 @@
       </parameters>      <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>269</xloc>
-      <yloc>59</yloc>
-      </entry>
-    <entry>
-      <name>LoadHyperSqlHive</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;LoadHyperSqlHive.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>391</xloc>
-      <yloc>58</yloc>
-      </entry>
-    <entry>
-      <name>LoadHyperSqlHdfs</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;LoadHyperSqlHdfs.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>514</xloc>
-      <yloc>59</yloc>
+      <xloc>230</xloc>
+      <yloc>172</yloc>
       </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>SQL</to>
+      <to>Transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -247,34 +189,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>SQL</from>
-      <to>LoadHyperSqlHbase</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>LoadHyperSqlHbase</from>
-      <to>LoadHyperSqlHive</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>LoadHyperSqlHive</from>
-      <to>LoadHyperSqlHdfs</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>LoadHyperSqlHdfs</from>
+      <from>Transformation</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -282,12 +197,38 @@
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Transformation</from>
+      <to>Failure</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
+    <notepad>
+      <note>SETUP INSTRUCTIONS&#x3a;&#xa;1. Update the &#x27;Pentaho MapReduce&#x27; step &#x28;Job Setup and Cluster tabs&#x29; to configure the correct paths and server names including&#x3a;&#xa;    - Input Path - the path in HDFS from which to read files for counting&#xa;    - Output Path - where the processed count of words will be placed.  This directory must not exist.&#xa;		- For the purposes of this validation, these only need to be valid directories on HDFS. The actual content is not used in the transformation.&#xa;    - HDFS Hostname&#xa;    - Job Tracker Hostname</note>
+      <xloc>20</xloc>
+      <yloc>40</yloc>
+      <width>861</width>
+      <heigth>113</heigth>
+      <fontname>Microsoft Sans Serif</fontname>
+      <fontsize>8</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>165</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
-<attributes><group><name>JobRestart</name>
-<attribute><key>UniqueConnections</key>
-<value>N</value>
-</attribute></group></attributes>
 
 </job>

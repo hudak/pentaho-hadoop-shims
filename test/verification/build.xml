@@ -100,7 +100,7 @@
   <target name="get-oozie-examples">
     <mkdir dir="${stage}/oozie-examples" />
     <mkdir dir="${stage}/oozie-examples-unzipped" />
-    <scp file="${suite.oozie.scp.username}:${suite.oozie.scp.password}@${suite.oozie.hostname}:${suite.oozie.examples.path}" todir="${stage}/oozie-examples" />
+    <scp file="${suite.oozie.scp.username}:${suite.oozie.scp.password}@${suite.oozie.hostname}:${suite.oozie.examples.path}" todir="${stage}/oozie-examples" trust="true" />
     <gunzip dest="${stage}/oozie-examples-unzipped">
       <fileset dir="${stage}/oozie-examples"/>
     </gunzip>
@@ -190,6 +190,10 @@
            jvm="java"
            dir="${run}"
            showoutput="true">
+      <!--
+      <jvmarg value="-Dmapr.library.flatclass" /> -->
+      <jvmarg value="-Xdebug" />
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8045" />
       <env key="SQOOP_CONF_DIR" value="${shimFolder}"/>
       <env key="SQOOP_HOME" value="${shimFolder}"/>
       <env key="PATH" value="${suite.hive.install}/bin${path.separator}${env.PATH}"/>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>PrepareHyperSql</name>
+  <name>SqoopImportHBaseTest</name>
     <description/>
     <extended_description/>
     <job_version/>
     <job_status>0</job_status>
   <directory>&#x2f;</directory>
   <created_user>-</created_user>
-  <created_date>2013&#x2f;07&#x2f;10 15&#x3a;22&#x3a;51.445</created_date>
+  <created_date>2012&#x2f;05&#x2f;17 12&#x3a;56&#x3a;17.368</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2013&#x2f;07&#x2f;10 15&#x3a;22&#x3a;51.445</modified_date>
+  <modified_date>2012&#x2f;05&#x2f;17 12&#x3a;56&#x3a;17.368</modified_date>
     <parameters>
         <parameter>
             <name>hsql.port</name>
@@ -18,6 +18,36 @@
         </parameter>
         <parameter>
             <name>hsql.url</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.hdfs.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.hdfs.port</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.jobtracker.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.jobtracker.port</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>zookeeper.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>zookeeper.port</name>
             <default_value/>
             <description/>
         </parameter>
@@ -68,6 +98,57 @@
       <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>mysql</name>
+    <server>172.17.0.3</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>test</database>
+    <port>3306</port>
+    <username>admin</username>
+    <password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>EXTRA_OPTION_MYSQL.defaultFetchSize</code><attribute>500</attribute></attribute>
+      <attribute><code>EXTRA_OPTION_MYSQL.useCursorFetch</code><attribute>true</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
+      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>pdi10644</name>
+    <server>localhost</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>di_hibernate</database>
+    <port>5432</port>
+    <username>hibuser</username>
+    <password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>5432</attribute></attribute>
+      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
     <slaveservers>
     </slaveservers>
 <job-log-table><connection/>
@@ -91,6 +172,39 @@
    <shared_objects_file/>
   <entries>
     <entry>
+      <name>Sqoop Import</name>
+      <description/>
+      <type>SqoopImport</type>
+    <columns>client_ip,year,apr,aug,dec,feb,jan,jul,jun,mar,may,nov,oct,sep</columns>
+    <splitBy>year</splitBy>
+    <columnFamily>client_info</columnFamily>
+    <hbaseCreateTable>true</hbaseCreateTable>
+    <hbaseTable>hbasesqooptest</hbaseTable>
+    <hbaseZookeeperQuorum>&#x24;&#x7b;zookeeper.hostname&#x7d;</hbaseZookeeperQuorum>
+    <hbaseZookeeperClientPort>&#x24;&#x7b;zookeeper.port&#x7d;</hbaseZookeeperClientPort>
+    <namenodeHost>&#x24;&#x7b;pmr.hdfs.hostname&#x7d;</namenodeHost>
+    <namenodePort>&#x24;&#x7b;pmr.hdfs.port&#x7d;</namenodePort>
+    <jobtrackerHost>&#x24;&#x7b;pmr.jobtracker.hostname&#x7d;</jobtrackerHost>
+    <jobtrackerPort>&#x24;&#x7b;pmr.jobtracker.port&#x7d;</jobtrackerPort>
+    <database>HyperSql</database>
+    <mode>ADVANCED_LIST</mode>
+    <connect>jdbc&#x3a;hsqldb&#x3a;xdb</connect>
+    <username>cluster</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb1aa265cd86aac8</password>
+    <fieldsTerminatedBy>&#x5c;t</fieldsTerminatedBy>
+    <linesTerminatedBy>&#x5c;n</linesTerminatedBy>
+    <table>hbase</table>
+    <commandLine>--split-by client_ip --column-family client_ip --hbase-create-table --hbase-table hbasesqooptest --connect jdbc&#x3a;hsqldb&#x3a;xdb --username cluster --password cluster --table hbase</commandLine>
+    <jobEntryName>Sqoop Import</jobEntryName>
+    <blockingPollingInterval>300</blockingPollingInterval>
+    <blockingExecution>true</blockingExecution>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>350</xloc>
+      <yloc>154</yloc>
+      </entry>
+    <entry>
       <name>START</name>
       <description/>
       <type>SPECIAL</type>
@@ -107,42 +221,16 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>83</xloc>
-      <yloc>59</yloc>
+      <xloc>163</xloc>
+      <yloc>154</yloc>
       </entry>
     <entry>
-      <name>SQL</name>
-      <description/>
-      <type>SQL</type>
-      <sql>DROP TABLE &#x22;PUBLIC&#x22;.HBASE IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.HBASE&#xa;&#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, apr BIGINT&#xa;, aug BIGINT&#xa;, &#x22;DEC&#x22; BIGINT&#xa;, feb BIGINT&#xa;, jan BIGINT&#xa;, jul BIGINT&#xa;, jun BIGINT&#xa;, mar BIGINT&#xa;, may BIGINT&#xa;, nov BIGINT&#xa;, oct BIGINT&#xa;, sep BIGINT&#xa;&#x29;&#xa;&#x3b;&#xa;&#xa;DROP TABLE &#x22;PUBLIC&#x22;.HIVE IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.HIVE&#xa;&#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, &#x22;MONTH&#x22; VARCHAR&#x28;32&#x29;&#xa;, month_num BIGINT&#xa;, pageviews BIGINT&#xa;&#x29;&#xa;&#x3b;&#xa;&#xa;DROP TABLE &#x22;PUBLIC&#x22;.HDFS IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.HDFS&#xa;&#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, month_num BIGINT&#xa;, pageviews BIGINT&#xa;&#x29;&#xa;&#x3b;&#xa;&#xa;DROP TABLE &#x22;PUBLIC&#x22;.AGGREGATEHDFS IF EXISTS&#x3b;&#xa;CREATE TABLE &#x22;PUBLIC&#x22;.AGGREGATEHDFS &#x28;&#xa;  client_ip VARCHAR&#x28;15&#x29;&#xa;, &#x22;YEAR&#x22; BIGINT&#xa;, month_num BIGINT&#xa;, pageviews BIGINT&#xa;&#x29;&#xa;&#x3b;</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename/>
-      <sendOneStatement>F</sendOneStatement>
-      <connection>HyperSql</connection>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>190</xloc>
-      <yloc>59</yloc>
-      </entry>
-    <entry>
-      <name>Success</name>
-      <description/>
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>628</xloc>
-      <yloc>61</yloc>
-      </entry>
-    <entry>
-      <name>LoadHyperSqlHbase</name>
+      <name>DropHbaseSqoopTest</name>
       <description/>
       <type>TRANS</type>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;LoadHyperSqlHbase.ktr</filename>
+      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;DropHbaseSqoopTest.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -166,80 +254,14 @@
       </parameters>      <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>269</xloc>
-      <yloc>59</yloc>
-      </entry>
-    <entry>
-      <name>LoadHyperSqlHive</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;LoadHyperSqlHive.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>391</xloc>
-      <yloc>58</yloc>
-      </entry>
-    <entry>
-      <name>LoadHyperSqlHdfs</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;LoadHyperSqlHdfs.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>514</xloc>
-      <yloc>59</yloc>
+      <xloc>252</xloc>
+      <yloc>154</yloc>
       </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>SQL</to>
+      <to>DropHbaseSqoopTest</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -247,35 +269,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>SQL</from>
-      <to>LoadHyperSqlHbase</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>LoadHyperSqlHbase</from>
-      <to>LoadHyperSqlHive</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>LoadHyperSqlHive</from>
-      <to>LoadHyperSqlHdfs</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>LoadHyperSqlHdfs</from>
-      <to>Success</to>
+      <from>DropHbaseSqoopTest</from>
+      <to>Sqoop Import</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -285,9 +280,5 @@
   </hops>
   <notepads>
   </notepads>
-<attributes><group><name>JobRestart</name>
-<attribute><key>UniqueConnections</key>
-<value>N</value>
-</attribute></group></attributes>
 
 </job>

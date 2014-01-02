@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>load_wordcount</name>
+  <name>load_hdfs</name>
     <description/>
     <extended_description/>
     <job_version/>
@@ -11,6 +11,11 @@
   <modified_user>-</modified_user>
   <modified_date>2013&#x2f;06&#x2f;19 11&#x3a;08&#x3a;10.295</modified_date>
     <parameters>
+        <parameter>
+            <name>fs.base</name>
+            <default_value>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;</default_value>
+            <description/>
+        </parameter>
         <parameter>
             <name>hadoop.hostname</name>
             <default_value/>
@@ -69,11 +74,14 @@
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
+    <read_only>true</read_only>
     <attributes>
       <attribute><code>EXTRA_OPTION_INFOBRIGHT.characterEncoding</code><attribute>UTF-8</attribute></attribute>
       <attribute><code>EXTRA_OPTION_MYSQL.defaultFetchSize</code><attribute>500</attribute></attribute>
       <attribute><code>EXTRA_OPTION_MYSQL.useCursorFetch</code><attribute>true</attribute></attribute>
       <attribute><code>PORT_NUMBER</code><attribute>50000</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
     </attributes>
   </connection>
   <connection>
@@ -142,6 +150,57 @@
       <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>mysql</name>
+    <server>172.17.0.3</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>test</database>
+    <port>3306</port>
+    <username>admin</username>
+    <password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>EXTRA_OPTION_MYSQL.defaultFetchSize</code><attribute>500</attribute></attribute>
+      <attribute><code>EXTRA_OPTION_MYSQL.useCursorFetch</code><attribute>true</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
+      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>pdi10644</name>
+    <server>localhost</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>di_hibernate</database>
+    <port>5432</port>
+    <username>hibuser</username>
+    <password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>5432</attribute></attribute>
+      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
     <slaveservers>
     </slaveservers>
 <job-log-table><connection/>
@@ -150,7 +209,7 @@
 <size_limit_lines/>
 <interval/>
 <timeout_days/>
-<field><id>ID_JOB</id><enabled>Y</enabled><name>ID_JOB</name></field><field><id>CHANNEL_ID</id><enabled>Y</enabled><name>CHANNEL_ID</name></field><field><id>JOBNAME</id><enabled>Y</enabled><name>JOBNAME</name></field><field><id>STATUS</id><enabled>Y</enabled><name>STATUS</name></field><field><id>LINES_READ</id><enabled>Y</enabled><name>LINES_READ</name></field><field><id>LINES_WRITTEN</id><enabled>Y</enabled><name>LINES_WRITTEN</name></field><field><id>LINES_UPDATED</id><enabled>Y</enabled><name>LINES_UPDATED</name></field><field><id>LINES_INPUT</id><enabled>Y</enabled><name>LINES_INPUT</name></field><field><id>LINES_OUTPUT</id><enabled>Y</enabled><name>LINES_OUTPUT</name></field><field><id>LINES_REJECTED</id><enabled>Y</enabled><name>LINES_REJECTED</name></field><field><id>ERRORS</id><enabled>Y</enabled><name>ERRORS</name></field><field><id>STARTDATE</id><enabled>Y</enabled><name>STARTDATE</name></field><field><id>ENDDATE</id><enabled>Y</enabled><name>ENDDATE</name></field><field><id>LOGDATE</id><enabled>Y</enabled><name>LOGDATE</name></field><field><id>DEPDATE</id><enabled>Y</enabled><name>DEPDATE</name></field><field><id>REPLAYDATE</id><enabled>Y</enabled><name>REPLAYDATE</name></field><field><id>LOG_FIELD</id><enabled>Y</enabled><name>LOG_FIELD</name></field></job-log-table>
+<field><id>ID_JOB</id><enabled>Y</enabled><name>ID_JOB</name></field><field><id>CHANNEL_ID</id><enabled>Y</enabled><name>CHANNEL_ID</name></field><field><id>JOBNAME</id><enabled>Y</enabled><name>JOBNAME</name></field><field><id>STATUS</id><enabled>Y</enabled><name>STATUS</name></field><field><id>LINES_READ</id><enabled>Y</enabled><name>LINES_READ</name></field><field><id>LINES_WRITTEN</id><enabled>Y</enabled><name>LINES_WRITTEN</name></field><field><id>LINES_UPDATED</id><enabled>Y</enabled><name>LINES_UPDATED</name></field><field><id>LINES_INPUT</id><enabled>Y</enabled><name>LINES_INPUT</name></field><field><id>LINES_OUTPUT</id><enabled>Y</enabled><name>LINES_OUTPUT</name></field><field><id>LINES_REJECTED</id><enabled>Y</enabled><name>LINES_REJECTED</name></field><field><id>ERRORS</id><enabled>Y</enabled><name>ERRORS</name></field><field><id>STARTDATE</id><enabled>Y</enabled><name>STARTDATE</name></field><field><id>ENDDATE</id><enabled>Y</enabled><name>ENDDATE</name></field><field><id>LOGDATE</id><enabled>Y</enabled><name>LOGDATE</name></field><field><id>DEPDATE</id><enabled>Y</enabled><name>DEPDATE</name></field><field><id>REPLAYDATE</id><enabled>Y</enabled><name>REPLAYDATE</name></field><field><id>LOG_FIELD</id><enabled>Y</enabled><name>LOG_FIELD</name></field><field><id>EXECUTING_SERVER</id><enabled>N</enabled><name>EXECUTING_SERVER</name></field><field><id>EXECUTING_USER</id><enabled>N</enabled><name>EXECUTING_USER</name></field><field><id>START_JOB_ENTRY</id><enabled>N</enabled><name>START_JOB_ENTRY</name></field><field><id>CLIENT</id><enabled>N</enabled><name>CLIENT</name></field></job-log-table>
 <jobentry-log-table><connection/>
 <schema/>
 <table/>
@@ -179,30 +238,25 @@
       <fields>
         <field>
           <source_filefolder>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;resources&#x2f;part-00000</source_filefolder>
-          <destination_filefolder>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;parse&#x2f;</destination_filefolder>
-          <wildcard/>
-        </field>
-        <field>
-          <source_filefolder>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;resources&#x2f;part-00000</source_filefolder>
-          <destination_filefolder>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;tmp</destination_filefolder>
+          <destination_filefolder>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;parse&#x2f;</destination_filefolder>
           <wildcard/>
         </field>
         <field>
           <source_filefolder>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;resources&#x2f;weblogs_rebuild.txt</source_filefolder>
-          <destination_filefolder>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;raw</destination_filefolder>
+          <destination_filefolder>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;raw</destination_filefolder>
           <wildcard/>
         </field>
         <field>
           <source_filefolder>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;resources</source_filefolder>
-          <destination_filefolder>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount&#x2f;input</destination_filefolder>
+          <destination_filefolder>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;input</destination_filefolder>
           <wildcard>pg.&#x2a;&#x5c;.txt</wildcard>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>45</xloc>
-      <yloc>136</yloc>
+      <xloc>996</xloc>
+      <yloc>350</yloc>
       </entry>
     <entry>
       <name>START</name>
@@ -231,39 +285,11 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>570</xloc>
-      <yloc>245</yloc>
+      <xloc>843</xloc>
+      <yloc>348</yloc>
       </entry>
     <entry>
-      <name>Hive 2 Sql</name>
-      <description/>
-      <type>SQL</type>
-      <sql>drop table if exists weblogs&#x3b;&#xa;create table weblogs &#x28;&#xa;client_ip    string,&#xa;full_request_date string,&#xa;day    string,&#xa;month    string,&#xa;month_num int,&#xa;year    string,&#xa;hour    string,&#xa;minute    string,&#xa;second    string,&#xa;timezone    string,&#xa;http_verb    string,&#xa;uri    string,&#xa;http_status_code    string,&#xa;bytes_returned        string,&#xa;referrer        string,&#xa;user_agent    string&#x29;&#xa;row format delimited&#xa;fields terminated by &#x27;&#x5c;t&#x27;&#x3b;&#xa;&#xa;LOAD DATA INPATH &#x27;&#x2f;tmp&#x2f;part-00000&#x27; INTO TABLE weblogs&#x3b;</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;tmp&#x2f;FoodmartDDL.txt</sqlfilename>
-      <sendOneStatement>F</sendOneStatement>
-      <connection>Hive 2</connection>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>333</yloc>
-      </entry>
-    <entry>
-      <name>Create &#x2f;user</name>
-      <description/>
-      <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user</foldername>
-      <fail_of_folder_exists>N</fail_of_folder_exists>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>131</xloc>
-      <yloc>41</yloc>
-      </entry>
-    <entry>
-      <name>Delete &#x2f;user&#x2f;pdi</name>
+      <name>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</name>
       <description/>
       <type>DELETE_FOLDERS</type>
       <arg_from_previous>N</arg_from_previous>
@@ -271,65 +297,53 @@
       <limit_folders>10</limit_folders>
       <fields>
         <field>
-          <name>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi</name>
+          <name>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</name>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>230</xloc>
-      <yloc>41</yloc>
+      <xloc>179</xloc>
+      <yloc>40</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;user&#x2f;pdi</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>335</xloc>
-      <yloc>41</yloc>
+      <xloc>390</xloc>
+      <yloc>40</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;user&#x2f;pdi&#x2f;weblogs</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;raw</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi&#x2f;weblogs</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;raw</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>461</xloc>
-      <yloc>41</yloc>
+      <xloc>618</xloc>
+      <yloc>40</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;raw</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;parse</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;raw</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;parse</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>626</xloc>
-      <yloc>41</yloc>
+      <xloc>890</xloc>
+      <yloc>40</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;parse</name>
-      <description/>
-      <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;parse</foldername>
-      <fail_of_folder_exists>Y</fail_of_folder_exists>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>814</xloc>
-      <yloc>41</yloc>
-      </entry>
-    <entry>
-      <name>Delete &#x2f;wordcount</name>
+      <name>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</name>
       <description/>
       <type>DELETE_FOLDERS</type>
       <arg_from_previous>N</arg_from_previous>
@@ -337,41 +351,41 @@
       <limit_folders>10</limit_folders>
       <fields>
         <field>
-          <name>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount</name>
+          <name>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</name>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>973</xloc>
-      <yloc>41</yloc>
+      <xloc>1165</xloc>
+      <yloc>42</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;wordcount</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>970</xloc>
-      <yloc>136</yloc>
+      <xloc>1165</xloc>
+      <yloc>139</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;wordcount&#x2f;input</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;input</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount&#x2f;input</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;input</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>837</xloc>
-      <yloc>136</yloc>
+      <xloc>909</xloc>
+      <yloc>139</yloc>
       </entry>
     <entry>
-      <name>Delete &#x2f;wordcount-hdfs-output</name>
+      <name>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</name>
       <description/>
       <type>DELETE_FOLDERS</type>
       <arg_from_previous>N</arg_from_previous>
@@ -379,181 +393,38 @@
       <limit_folders>10</limit_folders>
       <fields>
         <field>
-          <name>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount-hdfs-output</name>
+          <name>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</name>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>367</xloc>
-      <yloc>136</yloc>
+      <xloc>701</xloc>
+      <yloc>227</yloc>
       </entry>
     <entry>
-      <name>Create &#x2f;wordcount-hdfs-output</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount-hdfs-output</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>184</xloc>
-      <yloc>136</yloc>
+      <xloc>1002</xloc>
+      <yloc>229</yloc>
       </entry>
     <entry>
-      <name>HbaseInit</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;HbaseInit.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-            <parameter>            <name>ZOOKEEPER_HOSTNAME</name>
-            <stream_name/>
-            <value>&#x24;&#x7b;zookeeper.hostname&#x7d;</value>
-            </parameter>            <parameter>            <name>ZOOKEEPER_PORT</name>
-            <stream_name/>
-            <value>&#x24;&#x7b;zookeeper.port&#x7d;</value>
-            </parameter>      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>288</xloc>
-      <yloc>244</yloc>
-      </entry>
-    <entry>
-      <name>HbaseLoad</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;HbaseLoad.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>382</xloc>
-      <yloc>244</yloc>
-      </entry>
-    <entry>
-      <name>HbaseLoad2</name>
-      <description/>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;HbaseLoad2.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>476</xloc>
-      <yloc>244</yloc>
-      </entry>
-    <entry>
-      <name>Simple evaluation</name>
-      <description/>
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname/>
-      <variablename>&#x24;&#x7b;hive.type&#x7d;</variablename>
-      <fieldtype>string</fieldtype>
-      <mask/>
-      <comparevalue>hive2</comparevalue>
-      <minvalue/>
-      <maxvalue/>
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>42</xloc>
-      <yloc>379</yloc>
-      </entry>
-    <entry>
-      <name>Hive 1 Sql</name>
-      <description/>
-      <type>SQL</type>
-      <sql>drop table if exists weblogs&#x3b;&#xa;create table weblogs &#x28;&#xa;client_ip    string,&#xa;full_request_date string,&#xa;day    string,&#xa;month    string,&#xa;month_num int,&#xa;year    string,&#xa;hour    string,&#xa;minute    string,&#xa;second    string,&#xa;timezone    string,&#xa;http_verb    string,&#xa;uri    string,&#xa;http_status_code    string,&#xa;bytes_returned        string,&#xa;referrer        string,&#xa;user_agent    string&#x29;&#xa;row format delimited&#xa;fields terminated by &#x27;&#x5c;t&#x27;&#x3b;&#xa;&#xa;LOAD DATA INPATH &#x27;&#x2f;tmp&#x2f;part-00000&#x27; INTO TABLE weblogs&#x3b;</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;tmp&#x2f;FoodmartDDL.txt</sqlfilename>
-      <sendOneStatement>F</sendOneStatement>
-      <connection>Hive</connection>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>161</xloc>
-      <yloc>427</yloc>
-      </entry>
-    <entry>
-      <name>Create &#x2f;wordcount&#x2f;output</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;output</name>
       <description/>
       <type>CREATE_FOLDER</type>
-      <foldername>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;wordcount&#x2f;output</foldername>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;output</foldername>
       <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>682</xloc>
-      <yloc>136</yloc>
+      <xloc>642</xloc>
+      <yloc>139</yloc>
       </entry>
     <entry>
       <name>Set output permissions</name>
@@ -584,59 +455,90 @@
       <parameters>        <pass_all_parameters>Y</pass_all_parameters>
             <parameter>            <name>chmod.fullpath</name>
             <stream_name/>
-            <value>&#x2f;wordcount&#x2f;output</value>
+            <value>&#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;output</value>
             </parameter>            <parameter>            <name>chmod.permstring</name>
             <stream_name/>
             <value>777</value>
             </parameter>      </parameters>      <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>532</xloc>
-      <yloc>136</yloc>
+      <xloc>425</xloc>
+      <yloc>139</yloc>
       </entry>
     <entry>
-      <name>Impala Sql</name>
+      <name>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</name>
       <description/>
-      <type>SQL</type>
-      <sql>drop table if exists weblogs&#x3b;&#xa;create table weblogs &#x28;&#xa;client_ip    string,&#xa;full_request_date string,&#xa;day    string,&#xa;month    string,&#xa;month_num int,&#xa;year    string,&#xa;hour    string,&#xa;minute    string,&#xa;second    string,&#xa;timezone    string,&#xa;http_verb    string,&#xa;uri    string,&#xa;http_status_code    string,&#xa;bytes_returned        string,&#xa;referrer        string,&#xa;user_agent    string&#x29;&#xa;row format delimited&#xa;fields terminated by &#x27;&#x5c;t&#x27;&#x3b;&#xa;&#xa;LOAD DATA INPATH &#x27;&#x2f;tmp&#x2f;part-00000&#x27; INTO TABLE weblogs&#x3b;</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename>&#x24;&#x7b;hadoop.scheme&#x7d;&#x3a;&#x2f;&#x2f;&#x24;&#x7b;hadoop.hostname&#x7d;&#x3a;&#x24;&#x7b;hadoop.port&#x7d;&#x2f;tmp&#x2f;FoodmartDDL.txt</sqlfilename>
-      <sendOneStatement>F</sendOneStatement>
-      <connection>Impala</connection>
+      <type>CREATE_FOLDER</type>
+      <foldername>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</foldername>
+      <fail_of_folder_exists>Y</fail_of_folder_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>165</xloc>
-      <yloc>248</yloc>
+      <xloc>243</xloc>
+      <yloc>229</yloc>
       </entry>
     <entry>
-      <name>Simple evaluation 2</name>
+      <name>Set output permissions 2</name>
       <description/>
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname/>
-      <variablename>&#x24;&#x7b;hive.type&#x7d;</variablename>
-      <fieldtype>string</fieldtype>
-      <mask/>
-      <comparevalue>impala</comparevalue>
-      <minvalue/>
-      <maxvalue/>
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
+      <type>TRANS</type>
+      <specification_method>filename</specification_method>
+      <trans_object_id/>
+      <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;HadoopSetPermissions.ktr</filename>
+      <transname/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+            <parameter>            <name>chmod.fullpath</name>
+            <stream_name/>
+            <value>&#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</value>
+            </parameter>            <parameter>            <name>chmod.permstring</name>
+            <stream_name/>
+            <value>777</value>
+            </parameter>      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>440</xloc>
+      <yloc>230</yloc>
+      </entry>
+    <entry>
+      <name>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</name>
+      <description/>
+      <type>DELETE_FOLDERS</type>
+      <arg_from_previous>N</arg_from_previous>
+      <success_condition>success_if_no_errors</success_condition>
+      <limit_folders>10</limit_folders>
+      <fields>
+        <field>
+          <name>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</name>
+        </field>
+      </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>42</xloc>
-      <yloc>248</yloc>
+      <xloc>245</xloc>
+      <yloc>139</yloc>
       </entry>
   </entries>
   <hops>
     <hop>
-      <from>Create &#x2f;user</from>
-      <to>Delete &#x2f;user&#x2f;pdi</to>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;parse</from>
+      <to>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -644,17 +546,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>START</from>
-      <to>Create &#x2f;user</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Delete &#x2f;user&#x2f;pdi</from>
-      <to>Create &#x2f;user&#x2f;pdi</to>
+      <from>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -662,8 +555,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create &#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;parse</from>
-      <to>Delete &#x2f;wordcount</to>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;input</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -671,8 +564,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Delete &#x2f;wordcount</from>
-      <to>Create &#x2f;wordcount</to>
+      <from>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -680,25 +573,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create &#x2f;wordcount</from>
-      <to>Create &#x2f;wordcount&#x2f;input</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Delete &#x2f;wordcount-hdfs-output</from>
-      <to>Create &#x2f;wordcount-hdfs-output</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Create &#x2f;wordcount-hdfs-output</from>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</from>
       <to>Hadoop Upload</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -707,8 +582,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Hive 2 Sql</from>
-      <to>HbaseInit</to>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;raw</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -716,8 +591,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create &#x2f;user&#x2f;pdi</from>
-      <to>Create &#x2f;user&#x2f;pdi&#x2f;weblogs</to>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;raw</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;parse</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -725,8 +600,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create &#x2f;user&#x2f;pdi&#x2f;weblogs</from>
-      <to>Create &#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;raw</to>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;input</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;output</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -734,8 +609,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create &#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;raw</from>
-      <to>Create &#x2f;user&#x2f;pdi&#x2f;weblogs&#x2f;parse</to>
+      <from>START</from>
+      <to>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -743,70 +627,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>HbaseInit</from>
-      <to>HbaseLoad</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>HbaseLoad</from>
-      <to>HbaseLoad2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>HbaseLoad2</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Simple evaluation</from>
-      <to>Hive 2 Sql</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Simple evaluation</from>
-      <to>Hive 1 Sql</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Hive 1 Sql</from>
-      <to>HbaseInit</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Create &#x2f;wordcount&#x2f;input</from>
-      <to>Create &#x2f;wordcount&#x2f;output</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Create &#x2f;wordcount&#x2f;output</from>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount&#x2f;output</from>
       <to>Set output permissions</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -815,8 +636,35 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</from>
+      <to>Set output permissions 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set output permissions 2</from>
+      <to>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;wordcount-hdfs-output</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>Set output permissions</from>
-      <to>Delete &#x2f;wordcount-hdfs-output</to>
+      <to>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Delete &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</from>
+      <to>Create &#x2f;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;tmp</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -825,34 +673,7 @@
     </hop>
     <hop>
       <from>Hadoop Upload</from>
-      <to>Simple evaluation 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Simple evaluation 2</from>
-      <to>Impala Sql</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Simple evaluation 2</from>
-      <to>Simple evaluation</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Impala Sql</from>
-      <to>HbaseInit</to>
+      <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -862,4 +683,5 @@
   </hops>
   <notepads>
   </notepads>
+
 </job>

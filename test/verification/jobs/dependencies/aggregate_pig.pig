@@ -1,4 +1,4 @@
-weblogs = LOAD '/user/pdi/weblogs/parse/part*' USING PigStorage('\t')
+weblogs = LOAD '/user/$username/weblogs/parse/part*' USING PigStorage('\t')
         AS (
 client_ip:chararray,
 full_request_date:chararray,
@@ -21,4 +21,4 @@ user_agent:chararray
 weblog_group = GROUP weblogs by (client_ip, year, month_num);
 weblog_count = FOREACH weblog_group GENERATE group.client_ip, group.year, group.month_num,  COUNT_STAR(weblogs) as pageviews;
 
-STORE weblog_count INTO '/user/pdi/weblogs/aggregate_pig';
+STORE weblog_count INTO '/user/$username/weblogs/aggregate_pig';

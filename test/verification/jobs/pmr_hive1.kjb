@@ -1,39 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>aggregate_pig</name>
+  <name>pmr_hive1</name>
     <description/>
     <extended_description/>
     <job_version/>
     <job_status>0</job_status>
   <directory>&#x2f;</directory>
   <created_user>-</created_user>
-  <created_date>2012&#x2f;05&#x2f;03 10&#x3a;32&#x3a;29.307</created_date>
+  <created_date>2010&#x2f;07&#x2f;19 21&#x3a;35&#x3a;45.843</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2012&#x2f;05&#x2f;03 10&#x3a;32&#x3a;29.307</modified_date>
+  <modified_date>2010&#x2f;07&#x2f;19 21&#x3a;35&#x3a;45.843</modified_date>
     <parameters>
         <parameter>
-            <name>hadoop.hostname</name>
+            <name>hive1.database</name>
             <default_value/>
             <description/>
         </parameter>
         <parameter>
-            <name>hadoop.port</name>
-            <default_value>8020</default_value>
+            <name>hive1.hostname</name>
+            <default_value/>
             <description/>
         </parameter>
         <parameter>
-            <name>hadoop.scheme</name>
-            <default_value>hdfs</default_value>
+            <name>hive1.password</name>
+            <default_value/>
             <description/>
         </parameter>
         <parameter>
-            <name>jobtracker.hostname</name>
-            <default_value>&#x24;&#x7b;hadoop.hostname&#x7d;</default_value>
+            <name>hive1.port</name>
+            <default_value/>
             <description/>
         </parameter>
         <parameter>
-            <name>jobtracker.port</name>
-            <default_value>8021</default_value>
+            <name>hive1.username</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.hdfs.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.hdfs.port</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.jobtracker.hostname</name>
+            <default_value/>
+            <description/>
+        </parameter>
+        <parameter>
+            <name>pmr.jobtracker.port</name>
+            <default_value/>
             <description/>
         </parameter>
     </parameters>
@@ -59,31 +79,9 @@
       <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
     </attributes>
   </connection>
-  <connection>
-    <name>pdi10644</name>
-    <server>localhost</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>di_hibernate</database>
-    <port>5432</port>
-    <username>hibuser</username>
-    <password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
-      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
-      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>5432</attribute></attribute>
-      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
-      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
-      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
-      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
-      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
-    </attributes>
-  </connection>
     <slaveservers>
+         <slaveserver><name>di server</name><hostname>localhost</hostname><port>9080</port><webAppName>pentaho-di</webAppName><username>joe</username><password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password><proxy_hostname/><proxy_port/><non_proxy_hosts/><master>N</master></slaveserver>
+         <slaveserver><name>Carte</name><hostname>localhost</hostname><port>9991</port><webAppName/><username>cluster</username><password>Encrypted 2be98afc86aa7f2e4cb1aa265cd86aac8</password><proxy_hostname/><proxy_port/><non_proxy_hosts/><master>N</master></slaveserver>
     </slaveservers>
 <job-log-table><connection/>
 <schema/>
@@ -106,6 +104,56 @@
    <shared_objects_file/>
   <entries>
     <entry>
+      <name>Pentaho MapReduce</name>
+      <description/>
+      <type>HadoopTransJobExecutorPlugin</type>
+      <hadoop_job_name>Pentaho MapReduce</hadoop_job_name>
+      <map_trans_repo_dir/>
+      <map_trans_repo_file/>
+      <map_trans_repo_reference/>
+      <map_trans>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;hive1_input_output.ktr</map_trans>
+      <combiner_trans_repo_dir/>
+      <combiner_trans_repo_file/>
+      <combiner_trans_repo_reference/>
+      <combiner_trans/>
+      <combiner_single_threaded>Y</combiner_single_threaded>
+      <reduce_trans_repo_dir/>
+      <reduce_trans_repo_file/>
+      <reduce_trans_repo_reference/>
+      <reduce_trans/>
+      <reduce_single_threaded>Y</reduce_single_threaded>
+      <map_input_step_name>Hadoop Input</map_input_step_name>
+      <map_output_step_name>Hadoop Output</map_output_step_name>
+      <combiner_input_step_name/>
+      <combiner_output_step_name/>
+      <reduce_input_step_name/>
+      <reduce_output_step_name/>
+      <blocking>Y</blocking>
+      <logging_interval>10</logging_interval>
+      <input_path>&#x2f;wordcount&#x2f;input</input_path>
+      <input_format_class>org.apache.hadoop.mapred.TextInputFormat</input_format_class>
+      <output_path>&#x2f;wordcount&#x2f;output</output_path>
+      <clean_output_path>Y</clean_output_path>
+      <suppress_output_map_key>N</suppress_output_map_key>
+      <suppress_output_map_value>N</suppress_output_map_value>
+      <suppress_output_key>N</suppress_output_key>
+      <suppress_output_value>N</suppress_output_value>
+      <output_format_class>org.apache.hadoop.mapred.TextOutputFormat</output_format_class>
+      <hdfs_hostname>&#x24;&#x7b;pmr.hdfs.hostname&#x7d;</hdfs_hostname>
+      <hdfs_port>&#x24;&#x7b;pmr.hdfs.port&#x7d;</hdfs_port>
+      <job_tracker_hostname>&#x24;&#x7b;pmr.jobtracker.hostname&#x7d;</job_tracker_hostname>
+      <job_tracker_port>&#x24;&#x7b;pmr.jobtracker.port&#x7d;</job_tracker_port>
+      <num_map_tasks>1</num_map_tasks>
+      <num_reduce_tasks>0</num_reduce_tasks>
+      <user_defined_list>
+      </user_defined_list>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>297</xloc>
+      <yloc>158</yloc>
+      </entry>
+    <entry>
       <name>START</name>
       <description/>
       <type>SPECIAL</type>
@@ -122,49 +170,19 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>49</xloc>
-      <yloc>55</yloc>
+      <xloc>19</xloc>
+      <yloc>158</yloc>
       </entry>
     <entry>
-      <name>Pig Script Executor</name>
+      <name>Failure</name>
       <description/>
-      <type>HadoopPigScriptExecutorPlugin</type>
-    <hdfs_hostname>&#x24;&#x7b;pmr.hdfs.hostname&#x7d;</hdfs_hostname>
-    <hdfs_port>&#x24;&#x7b;pmr.hdfs.port&#x7d;</hdfs_port>
-    <jobtracker_hostname>&#x24;&#x7b;pmr.jobtracker.hostname&#x7d;</jobtracker_hostname>
-    <jobtracker_port>&#x24;&#x7b;pmr.jobtracker.port&#x7d;</jobtracker_port>
-    <script_file>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;dependencies&#x2f;aggregate_pig.pig</script_file>
-    <enable_blocking>Y</enable_blocking>
-    <local_execution>N</local_execution>
-    <script_parameters>
-      <parameter>
-        <name>username</name>
-        <value>&#x24;&#x7b;user.name&#x7d;</value>
-      </parameter>
-    </script_parameters>
+      <type>ABORT</type>
+      <message/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>324</xloc>
-      <yloc>54</yloc>
-      </entry>
-    <entry>
-      <name>Delete folders</name>
-      <description/>
-      <type>DELETE_FOLDERS</type>
-      <arg_from_previous>N</arg_from_previous>
-      <success_condition>success_if_no_errors</success_condition>
-      <limit_folders>10</limit_folders>
-      <fields>
-        <field>
-          <name>&#x24;&#x7b;fs.base&#x7d;user&#x2f;&#x24;&#x7b;user.name&#x7d;&#x2f;weblogs&#x2f;aggregate_pig</name>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>170</xloc>
-      <yloc>54</yloc>
+      <xloc>440</xloc>
+      <yloc>292</yloc>
       </entry>
     <entry>
       <name>Success</name>
@@ -173,22 +191,13 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>434</xloc>
-      <yloc>55</yloc>
+      <xloc>439</xloc>
+      <yloc>158</yloc>
       </entry>
   </entries>
   <hops>
     <hop>
-      <from>Delete folders</from>
-      <to>Pig Script Executor</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Pig Script Executor</from>
+      <from>Pentaho MapReduce</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -197,8 +206,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>Pentaho MapReduce</from>
+      <to>Failure</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>START</from>
-      <to>Delete folders</to>
+      <to>Pentaho MapReduce</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -207,6 +225,27 @@
     </hop>
   </hops>
   <notepads>
+    <notepad>
+      <note>SETUP INSTRUCTIONS&#x3a;&#xa;1. Update the &#x27;Pentaho MapReduce&#x27; step &#x28;Job Setup and Cluster tabs&#x29; to configure the correct paths and server names including&#x3a;&#xa;    - Input Path - the path in HDFS from which to read files for counting&#xa;    - Output Path - where the processed count of words will be placed.  This directory must not exist.&#xa;		- For the purposes of this validation, these only need to be valid directories on HDFS. The actual content is not used in the transformation.&#xa;    - HDFS Hostname&#xa;    - Job Tracker Hostname</note>
+      <xloc>20</xloc>
+      <yloc>40</yloc>
+      <width>861</width>
+      <heigth>113</heigth>
+      <fontname>Microsoft Sans Serif</fontname>
+      <fontsize>8</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>165</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
 
 </job>
