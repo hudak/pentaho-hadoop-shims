@@ -1,0 +1,244 @@
+<!--===========================================================================
+  This is the build file for the HDP 1.3 Shim modules.
+  
+  See ../build-res/subfloor.xml for more details
+============================================================================-->
+<project name="pentaho-hadoop-shims-hdp13" basedir="." default="dist"
+  xmlns:ivy="antlib:org.apache.ivy.ant" >
+
+  <description>
+    This build file is used to create the HDP1.3 Shim module for the Big Data plugin
+    and is based off Subfloor (../build-res/subfloor.xml)
+  </description>
+
+  <import file="../../build-res/subfloor.xml"/>
+
+  <property environment="env"/>
+  <property name="bin" value="bin" />
+  <property name="run" location="${kettle-dir}" />
+  <property name="suite.job.dirname" location="${suite.job.relative}" />
+  <property name="stage" value="${bin}/stage" />
+  <property name="hsqldb" value="${run}/hsqldb" />
+  <property name="hsqldb-stage" value="${stage}/hsqldb" />
+  <property name="run-lib" value="${run}/lib" />
+  <property name="run-libswt" value="${run}/libswt" />
+
+  <macrodef name="ivy-resolve">
+    <attribute name="ivyfile" default="${ivyfile}" />
+    <attribute name="conf" default="default" />
+    <attribute name="directory"/>
+    <sequential>
+      <mkdir dir="@{directory}" />
+      <ivy:resolve file="@{ivyfile}" conf="@{conf}" />
+      <ivy:retrieve conf="@{conf}" pattern="@{directory}/[module]-[revision](-[classifier]).[ext]" />
+    </sequential>
+  </macrodef>
+
+  <target name="prepare-jsch" depends="install-ivy">
+    <ivy-resolve conf="jsch" directory="${user.home}/.ant/lib" />             
+  </target>
+
+  <target name="get-pdi-ce" depends="install-ivy">
+    <ivy-resolve conf="pdi-ce" directory="${stage}/pdi-ce" />
+    <mkdir dir="${run}" />
+    <unzip dest="${run}">
+      <fileset dir="${stage}/pdi-ce" />
+      <mapper>
+        <globmapper from="data-integration/*" to="*" />
+      </mapper>
+    </unzip>
+  </target>
+
+  <target name="install-big-data" depends="install-ivy">
+    <ivy-resolve conf="big-data-plugin" directory="${stage}/big-data-plugin" />
+    <ivy-resolve conf="big-data-samples" directory="${stage}/big-data-samples" />
+    <delete includeemptydirs="true">
+      <fileset dir="${run}/plugins/pentaho-big-data-plugin" includes="**/*" />
+    </delete>
+    <unzip dest="${run}/plugins">
+      <fileset dir="${stage}/big-data-plugin" />
+    </unzip>
+    <unzip dest="${run}/samples">
+      <fileset dir="${stage}/big-data-samples" />
+    </unzip>
+  </target>
+
+  <target name="install-shim" depends="install-ivy">
+    <ivy-resolve conf="shim" directory="${stage}/shim" />
+    <delete includeemptydirs="true">
+      <fileset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/" includes="**/*" />
+    </delete>
+    <unzip dest="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
+      <fileset dir="${stage}/shim" />
+    </unzip>
+    <replaceregexp file="${run}/plugins/pentaho-big-data-plugin/plugin.properties" match="active.hadoop.configuration=(.*)" replace="active.hadoop.configuration=${shim}" byline="true"/>
+  </target>
+
+  <target name="setup-hsql" depends="install-ivy">
+    <mkdir dir="${hsqldb}" />
+    <ivy-resolve conf="hsqldb" directory="${hsqldb-stage}" />
+    <copy todir="${hsqldb}">
+      <fileset dir="${hsqldb-stage}" includes="*.jar"/>
+    </copy>
+    <path id="shimLibPath">
+      <dirset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
+        <include name="**/lib"/>
+      </dirset>
+    </path>
+    <property name="shimLib" location="${toString:shimLibPath}"/>
+    <for param="to.dir" list="${shimLib}" delimiter="${path.separator}">
+      <sequential>
+        <copy todir="@{to.dir}">
+          <fileset dir="${hsqldb-stage}" includes="*.jar"/>
+        </copy>
+      </sequential>
+    </for>
+  </target>
+
+  <target name="setup-pdi-ce" depends="install-ivy,get-pdi-ce,install-big-data,install-shim,setup-hsql,get-oozie-examples"/>
+
+  <target name="get-oozie-examples">
+    <mkdir dir="${stage}/oozie-examples" />
+    <mkdir dir="${stage}/oozie-examples-unzipped" />
+    <scp file="${suite.oozie.scp.username}:${suite.oozie.scp.password}@${suite.oozie.hostname}:${suite.oozie.examples.path}" todir="${stage}/oozie-examples" trust="true" />
+    <gunzip dest="${stage}/oozie-examples-unzipped">
+      <fileset dir="${stage}/oozie-examples"/>
+    </gunzip>
+    <untar dest="${run}">
+      <fileset dir="${stage}/oozie-examples-unzipped"/>
+    </untar>
+  </target>
+
+  <target name="create-dot-classpath" depends="install-pentaho-ant-tasks,init">
+    <dot-classpath>
+      <!-- Include all lib dirs -->
+      <classpath>
+        <fileset dir="${hsqldb}" includes="*.jar" />
+        <fileset dir="${testlib.dir}" includes="*.jar"/>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar" />
+        </fileset>
+        <fileset dir="${devlib.dir}">
+          <include name="*.jar" />
+        </fileset>
+        <fileset dir="${run-lib}">
+          <include name="*.jar" />
+        </fileset>
+      </classpath>
+    </dot-classpath>
+  </target>
+
+  <target name="clean-all" depends="subfloor.clean-all">
+    <delete dir="${run}" />
+    <delete dir="jobs/resources" />
+  </target>
+
+  <target name="compile.pre" depends="install-ivy,subfloor.compile.pre">
+    <mkdir dir="src" />
+    <unzip dest="jobs/" src="jobs/resources.zip"/>
+    <ivy-resolve conf="test" directory="${testlib.dir}" />
+  </target>
+
+  <target name="compile-tests" depends="init-tests">
+    <javac destdir="${testclasses.dir}"
+           debug="true"
+           optimize="false"
+           source="${javac.source}"
+           target="${javac.target}"
+           fork="true">
+      <src path="${testsrc.dir}" />
+      <classpath>
+        <fileset dir="${hsqldb}" includes="*.jar" />
+        <fileset dir="${testlib.dir}" includes="*.jar"/>
+        <fileset dir="${run-lib}" includes="kettle-core*.jar"/>
+        <fileset dir="${run-lib}" includes="kettle-engine*.jar"/>
+        <!-- <fileset dir="test/libext/" includes="kettle.jar"/>-->
+        <pathelement path="${testclasses.dir}"/>
+
+        <fileset dir="${run-lib}" 		includes="*.jar *.zip"/>
+        <fileset dir="${run-libswt}" 		includes="*.jar *.zip"/>
+        <fileset dir="${run-libswt}/win32/" includes="*.jar *.zip"/>
+      </classpath>
+    </javac>
+
+    <!-- Copy the non-java files from the source directory to the test classes directory
+-->
+    <copy todir="${testclasses.dir}">
+      <fileset dir="${testsrc.dir}">
+        <exclude name="**/*.java" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="test" depends="compile,compile-tests,init-test-reports" description="Execute the tests">
+    <delete>
+      <fileset dir="${run}" includes="*.java"/>
+    </delete>
+    <path id="shimPath">
+      <dirset dir="${run}/plugins/pentaho-big-data-plugin/hadoop-configurations/">
+        <depth max="0" />
+        <include name="**/*"/>
+      </dirset>
+    </path>
+    <property name="shimFolder" location="${toString:shimPath}"/>
+    <junit maxmemory="${junit.maxmemory}"
+           fork="yes"
+           failureProperty="test.failed"
+           haltonfailure="${junit.haltonfailure}"
+           printsummary="yes"
+           forkmode="once"
+           jvm="java"
+           dir="${run}"
+           showoutput="true">
+      <!--
+      <jvmarg value="-Dmapr.library.flatclass" /> -->
+      <jvmarg value="-Xdebug" />
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8045" />
+      <env key="SQOOP_CONF_DIR" value="${shimFolder}"/>
+      <env key="SQOOP_HOME" value="${shimFolder}"/>
+      <env key="PATH" value="${suite.hive.install}/bin${path.separator}${env.PATH}"/>
+      <env key="HIVE_HOME" value="${suite.hive.install}"/>
+      <env key="HADOOP_HOME" value="${suite.hadoop.install}"/>
+      <sysproperty key="hive.site.dir" value="${shimFolder}" />
+      <syspropertyset>
+        <propertyref prefix="suite." />
+        <mapper type="glob" from="suite.*" to="" />
+      </syspropertyset>
+
+      <classpath>
+        <fileset dir="${hsqldb}" includes="*.jar" />
+        <fileset dir="${testlib.dir}" includes="*.jar"/>
+        <fileset dir="${run-lib}" includes="kettle-core*.jar"/>
+        <fileset dir="${run-lib}" includes="kettle-engine*.jar"/>
+        <fileset dir="${run-lib}" includes="kettle-db*.jar"/>
+        <pathelement path="${testclasses.dir}"/>
+
+        <fileset dir="${run-lib}" 		includes="*.jar *.zip"/>
+        <fileset dir="${run-libswt}" 		includes="*.jar *.zip"/>
+        <fileset dir="${run-libswt}/win32/" includes="*.jar *.zip"/>
+      </classpath>
+
+      <sysproperty key="java.awt.headless" value="${headless.unittest}" />
+
+      <syspropertyset>
+        <propertyref prefix="junit.sysprop." />
+        <mapper type="glob" from="junit.sysprop.*" to="*"/>
+      </syspropertyset>
+      <formatter type="xml" />
+
+      <!-- <test name="${testcase}" todir="${testreports.xml.dir}" if="testcase" />-->
+      <batchtest todir="${testreports.xml.dir}">
+        <fileset dir="${testsrc.dir}" casesensitive="yes">
+          <include name="**/*Test.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+
+    <junitreport todir="${testreports.html.dir}">
+      <fileset dir="${testreports.xml.dir}">
+        <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${testreports.html.dir}" />
+    </junitreport>
+  </target>
+</project>
