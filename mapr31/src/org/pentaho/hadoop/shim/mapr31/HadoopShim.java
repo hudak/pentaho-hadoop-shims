@@ -22,17 +22,25 @@
 
 package org.pentaho.hadoop.shim.mapr31;
 
+import java.net.URLClassLoader;
 import java.util.List;
 
+import org.pentaho.di.core.auth.AuthenticationConsumerPluginType;
+import org.pentaho.di.core.auth.AuthenticationPersistenceManager;
+import org.pentaho.di.core.auth.core.AuthenticationManager;
+import org.pentaho.di.core.auth.core.AuthenticationPerformer;
 import org.pentaho.hadoop.shim.HadoopConfiguration;
 import org.pentaho.hadoop.shim.HadoopConfigurationFileSystemManager;
 import org.pentaho.hadoop.shim.api.Configuration;
 import org.pentaho.hadoop.shim.common.CommonHadoopShim;
-import org.pentaho.hadoop.shim.common.DistributedCacheUtilImpl;
+import org.pentaho.hadoop.shim.mapr31.auth.MapRSuperUserKerberosConsumer.MapRSuperUserKerberosConsumerType;
 import org.pentaho.hdfs.vfs.MapRFileProvider;
 
-public class HadoopShim extends CommonHadoopShim {
+import com.mapr.fs.proto.Security.TicketAndKey;
+import com.mapr.login.client.MapRLoginHttpsClient;
 
+public class HadoopShim extends CommonHadoopShim {
+  protected static final String SUPER_USER = "authentication.superuser.provider";
   protected static final String DEFAULT_CLUSTER = "/";
   protected static final String MFS_SCHEME = "maprfs://";
   protected static final String[] EMPTY_CONNECTION_INFO = new String[2];
@@ -90,8 +98,26 @@ public class HadoopShim extends CommonHadoopShim {
   }
 
   @Override
-  public void onLoad(HadoopConfiguration config, HadoopConfigurationFileSystemManager fsm) throws Exception {
-    fsm.addProvider(config, MapRFileProvider.SCHEME, config.getIdentifier(), new MapRFileProvider());
-    setDistributedCacheUtil(new MapR3DistributedCacheUtilImpl(config));
+  public void onLoad( HadoopConfiguration config, HadoopConfigurationFileSystemManager fsm ) throws Exception {
+    fsm.addProvider( config, MapRFileProvider.SCHEME, config.getIdentifier(), new MapRFileProvider() );
+    AuthenticationConsumerPluginType.getInstance().registerPlugin( (URLClassLoader) getClass().getClassLoader(),
+        MapRSuperUserKerberosConsumerType.class );
+    if ( config.getConfigProperties().containsKey( SUPER_USER ) ) {
+      AuthenticationManager manager = AuthenticationPersistenceManager.getAuthenticationManager();
+      AuthenticationPerformer<TicketAndKey, MapRLoginHttpsClient> performer =
+          manager.getAuthenticationPerformer( TicketAndKey.class, MapRLoginHttpsClient.class, config
+              .getConfigProperties().getProperty( SUPER_USER ) );
+      if ( performer == null ) {
+        throw new RuntimeException( "Unable to find relevant provider for MapR super user (id of "
+            + config.getConfigProperties().getProperty( SUPER_USER ) );
+      } else {
+        TicketAndKey ticket = performer.perform( new MapRLoginHttpsClient() );
+        if ( ticket == null ) {
+          throw new RuntimeException( "Unable to get MapR ticket for provider "
+              + config.getConfigProperties().getProperty( SUPER_USER ) );
+        }
+      }
+    }
+    setDistributedCacheUtil( new MapR3DistributedCacheUtilImpl( config ) );
   }
 }
