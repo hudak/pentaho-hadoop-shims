@@ -1,4 +1,4 @@
-package org.pentaho.hadoop.shim.mapr31.auth;
+package org.pentaho.hadoop.shim.mapr31.authentication;
 
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -18,7 +18,7 @@ import com.mapr.fs.proto.Security.TicketAndKey;
 import com.mapr.login.client.MapRLoginHttpsClient;
 
 public class MapRSuperUserKerberosConsumer implements
-    AuthenticationConsumer<TicketAndKey, KerberosAuthenticationProvider> {
+    AuthenticationConsumer<Void, KerberosAuthenticationProvider> {
   @AuthenticationConsumerPlugin( id = "MapRSuperUserKerberosConsumer", name = "MapRSuperUserKerberosConsumer" )
   public static class MapRSuperUserKerberosConsumerType implements AuthenticationConsumerType {
 
@@ -33,16 +33,15 @@ public class MapRSuperUserKerberosConsumer implements
     }
   }
 
-  private final MapRLoginHttpsClient client;
   private final KerberosUtil kerberosUtil;
 
-  public MapRSuperUserKerberosConsumer( MapRLoginHttpsClient client ) {
-    this.client = client;
+  public MapRSuperUserKerberosConsumer( Void client ) {
+    System.setProperty("mapr.library.flatclass", "");
     this.kerberosUtil = new KerberosUtil();
   }
 
   @Override
-  public TicketAndKey consume( KerberosAuthenticationProvider authenticationProvider )
+  public Void consume( KerberosAuthenticationProvider authenticationProvider )
     throws AuthenticationConsumptionException {
     final LoginContext loginContext;
     try {
@@ -64,13 +63,14 @@ public class MapRSuperUserKerberosConsumer implements
     }
     try {
       loginContext.login();
-      return Subject.doAs( loginContext.getSubject(), new PrivilegedExceptionAction<TicketAndKey>() {
+      Subject.doAs( loginContext.getSubject(), new PrivilegedExceptionAction<TicketAndKey>() {
 
         @Override
         public TicketAndKey run() throws Exception {
-          return client.getMapRCredentialsViaKerberos( 1209600000L );
+          return new MapRLoginHttpsClient().getMapRCredentialsViaKerberos( 1209600000L );
         }
       } );
+      return null;
     } catch ( LoginException e ) {
       throw new AuthenticationConsumptionException( e );
     } catch ( PrivilegedActionException e ) {
